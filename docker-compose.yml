@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  express-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql-db
+
+  mysql-db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: your-mysql-database
+      MYSQL_USER: your-mysql-username
+      MYSQL_PASSWORD: your-mysql-password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db_data:/var/lib/mysql

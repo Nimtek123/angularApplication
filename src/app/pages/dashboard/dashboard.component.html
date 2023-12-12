@@ -1,0 +1,48 @@
+<div class="row">
+  <!-- --------------------------------------------------------------------------- -->
+  <!-- Sales Overview -->
+  <!-- --------------------------------------------------------------------------- -->
+  <div class="col-lg-8 d-flex align-items-center">
+    <mat-card class="b-1 shadow-none">
+      <mat-card-header>
+        <mat-card-title>Upload Video</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="b-t-1" style="height: 20rem;">
+        <form class="m-t-30" [formGroup]="fileUpload">
+        
+          <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
+            >Select Video</mat-label
+          >
+          <mat-form-field class="w-full">
+            <input
+                type="file"
+                class="absolute top-0 z-10 h-full w-full cursor-pointer opacity-0"
+                accept=".mp4"
+                formControlName="fileInput"
+                (change)="onFileSelected($event)"
+            />
+            <input
+                matInput
+                cdkFocusInitial
+                class="z-0"
+            />
+            <mat-icon matSuffix class="mr-2">cloud_upload</mat-icon>
+            <mat-hint class="mat-form-field-hint-end"
+                >.mp4 file format</mat-hint
+            >
+        </mat-form-field>
+          <!-- <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput formControlName="fileInput"   />
+          </mat-form-field> -->
+
+          <button mat-flat-button color="primary" [disabled]="fileUpload.invalid" (click)="formSubmit()" class="w-100">
+            Save
+          </button>
+          <!-- input -->
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+
+</div>
