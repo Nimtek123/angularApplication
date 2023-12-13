@@ -1,61 +1,30 @@
 <div class="row">
-  <!-- --------------------------------------------------------------------------- -->
-  <!-- Video Player -->
-  <!-- --------------------------------------------------------------------------- -->
-  <div class="col-lg-6" >
-    <mat-card class="cardWithShadow" style="width: 100%; height: 30rem;">
-      <mat-card-content class="p-24">
-        <div class="d-flex w-100">
-          <mat-card-title>Video Player</mat-card-title>
-          <div class="m-l-auto">
-            <video style="width: 100%; height: 26rem;"></video>
-          </div>
-        </div>
-       
-      </mat-card-content>
-    </mat-card>
-  </div>
 
-
-
-
-  <div class="col-lg-6" >
+  <div class="col-lg-8" >
     <mat-card class="cardWithShadow" style="width: 100%; height: 30rem;">
       <mat-card-content class="p-24">
         <mat-card-title>Uploaded Videos</mat-card-title>
         <div class="table-responsive m-t-16" >
           <table mat-table [dataSource]="dataSource" class="w-100" >
             <!-- Position Column -->
-            <ng-container matColumnDef="assigned">
+            <ng-container matColumnDef="filename">
               <th
                 mat-header-cell
                 *matHeaderCellDef
                 class="f-w-600 mat-subtitle-1 f-s-14"
               >
-                Title
+                Video Url
               </th>
               <td mat-cell *matCellDef="let element">
-                <div class="d-flex align-items-center">
-                  <img
-                    [src]="element.imagePath"
-                    alt="users"
-                    width="40"
-                    class="rounded-circle"
-                  />
-                  <div class="m-l-16">
-                    <h6 class="mat-subtitle-1 f-s-14 f-w-600">
-                      {{ element.uname }}
-                    </h6>
-                    <span class="mat-body-1 f-s-12">
-                      {{ element.position }}
+                    {{ element.filename }}<br />
+                    <span style="text-decoration: underline; color: blue; cursor: pointer;" mat-flat-button color="primary" (click)="activeVideo(element.filename)" class="w-100">
+                      Play
                     </span>
-                  </div>
-                </div>
               </td>
             </ng-container>
 
             <!-- Name Column -->
-            <ng-container matColumnDef="name">
+            <ng-container matColumnDef="originalname">
               <th
                 mat-header-cell
                 *matHeaderCellDef
@@ -63,77 +32,48 @@
               >
                 File Name
               </th>
-              <td mat-cell *matCellDef="let element" class="mat-body-1">
-                {{ element.productName }}
+              <td mat-cell *matCellDef="let element" class="mat-body-1" style="max-width: 10rem;">
+                {{ element.originalname }}
+                 
               </td>
             </ng-container>
 
             <!-- Weight Column -->
-            <ng-container matColumnDef="priority">
+            <ng-container matColumnDef="size">
               <th
                 mat-header-cell
                 *matHeaderCellDef
                 class="f-w-600 mat-subtitle-1 f-s-14"
               >
-                Url
+                File Size
               </th>
               <td mat-cell *matCellDef="let element">
-                <ng-template [ngIf]="element.priority == 'low'">
-                  <span
-                    class="bg-light-accent text-accent rounded f-w-600 p-6 p-y-4 f-s-12"
-                  >
-                    {{ element.priority | titlecase }}
-                  </span>
-                </ng-template>
-                <ng-template [ngIf]="element.priority == 'medium'">
-                  <span
-                    class="bg-light-primary text-primary rounded f-w-600 p-6 p-y-4 f-s-12"
-                  >
-                    {{ element.priority | titlecase }}
-                  </span>
-                </ng-template>
-                <ng-template [ngIf]="element.priority == 'high'">
-                  <span
-                    class="bg-light-warning text-warning rounded f-w-600 p-6 p-y-4 f-s-12"
-                  >
-                    {{ element.priority | titlecase }}
-                  </span>
-                </ng-template>
-                <ng-template [ngIf]="element.priority == 'critical'">
-                  <span
-                    class="bg-light-error text-error rounded f-w-600 p-6 p-y-4 f-s-12"
-                  >
-                    {{ element.priority | titlecase }}
-                  </span>
-                </ng-template>
-                <ng-template [ngIf]="element.priority == 'moderate'">
-                  <span
-                    class="bg-light-success text-success rounded f-w-600 p-6 p-y-4 f-s-12"
-                  >
-                    {{ element.priority | titlecase }}
-                  </span>
-                </ng-template>
-              </td>
-            </ng-container>
-
-            <!-- Symbol Column -->
-            <ng-container matColumnDef="budget">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                class="f-w-600 mat-subtitle-1 f-s-14"
-              >
-                Budget
-              </th>
-              <td mat-cell *matCellDef="let element" class="mat-body-1">
-                ${{ element.budget }}k
-              </td>
+                {{ element.size }} kb
+            </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           </table>
         </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+
+    <!-- --------------------------------------------------------------------------- -->
+  <!-- Video Player -->
+  <!-- --------------------------------------------------------------------------- -->
+  <div class="col-lg-4" >
+    <mat-card class="cardWithShadow" style="width: 100%; height: 30rem;">
+      <mat-card-content class="p-24">
+        <mat-card-title>Video Player</mat-card-title><br />
+        <div class="d-flex w-100">
+          <div class="m-l-auto">
+            <video controls autoplay style="width: 100%; height: 22rem;" src="{{activeFile}}"></video>
+          </div>
+        </div>
+       
       </mat-card-content>
     </mat-card>
   </div>

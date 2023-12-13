@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component,     
+  ViewChild,
+  TemplateRef} from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ApiRequestService } from '../../../app/common/api-request.service';
 import { NgxUiLoaderService } from "ngx-ui-loader"; // Import NgxUiLoaderService
@@ -6,7 +8,12 @@ import { environment } from '../../../environments/environment';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from "@angular/material/dialog";
+import { ModalComponent } from "../modal.component";
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +21,7 @@ import { Router } from '@angular/router';
 })
 export class AppDashboardComponent {
   
+
   fileUpload: any = this.fb.group({
     fileInput: ['', [Validators.required]],
   });
@@ -24,6 +32,7 @@ export class AppDashboardComponent {
   displayedColumns: string[] = ['assigned', 'name', 'priority', 'budget'];
   selectedFile: File | null = null;
 
+  message = "";
 
   constructor(
     private fb: FormBuilder,
@@ -31,6 +40,7 @@ export class AppDashboardComponent {
     private http: HttpClient,
     private router: Router,
     private apiRequestService: ApiRequestService,
+    private matDialog: MatDialog
   ) {
 
   }
@@ -38,6 +48,8 @@ export class AppDashboardComponent {
   onValueChange(file: File[]) {
     console.log('File changed!');
   }
+
+  
   ngOnInit(): void {
     this.fileUpload.valueChanges.subscribe((files: File[]) =>
       console.log(this.fileUpload.value, this.fileUpload.valid)
@@ -49,9 +61,21 @@ export class AppDashboardComponent {
   }
 
   uploadFile() {
+    this.ngxService.start();
+    setTimeout(() => {
+        this.ngxService.stop(); // stop foreground spinner of the master loader with 'default' taskId
+    }, 2000);
+
     if (this.selectedFile) {
-      this.apiRequestService.uploadFile(this.selectedFile).subscribe((response) => {
+      this.apiRequestService.uploadFile(this.selectedFile).subscribe((response: any) => {
         // Handle the response
+        console.log(response)
+        this.OpenModal(response.message, "File Upload")
+
+        setTimeout(()=>{
+          this.router.navigateByUrl("/dashboard/videoplayer");
+        },3000)
+
       });
     }
   }
@@ -65,15 +89,19 @@ export class AppDashboardComponent {
         this.ngxService.stop(); // stop foreground spinner of the master loader with 'default' taskId
       }, 5000);
 
-      // var body = { "payload": { ...this.fileUpload.value } };
-      // const defaultOptions = {
-      //   autohide: true,
-      //   delay: 10000,
-      // };
-
       this.uploadFile();
 
     }
 
   }
+
+  OpenModal(message: any, title: any) {
+    this.matDialog.open(ModalComponent, {
+      data: { message: message, title: title },
+      disableClose: true
+    });
+
+  }
+
+  
 }

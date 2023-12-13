@@ -10,26 +10,27 @@ import { Router } from '@angular/router';
 
 export class ApiRequestService {
     urlEnvironment = "";
+    private apiUrl = 'http://localhost:3000/api/'; // Replace with your backend API URL
+
     constructor(
         private http: HttpClient,
         private router: Router,
     ) { }
 
     //APi Connection
-    apiRequest(url: string, jsonFile: string, body: any): Observable<any> {
+    apiRequest(url: string, body: any): Observable<any> {
 
-        if (!localStorage.getItem("userID")) {
-            this.router.navigateByUrl("/authentication/login");
-        }
+        // if (!localStorage.getItem("userID")) {
+        //     this.router.navigateByUrl("/authentication/login");
+        // }
         this.urlEnvironment = environment.apiUrl;
 
         // let accessToken = localStorage.getItem("access_token");
 
-        const headers = { 'content-type': 'application/json' }
+        // const headers = { 'content-type': 'application/json' }
 
         //lets return live data
-        let postData = this.http.post(this.urlEnvironment + url, body, {
-            'headers': headers,
+        let postData = this.http.post(this.apiUrl + url, body, {
             'observe': 'body',
         })
 
@@ -42,7 +43,7 @@ export class ApiRequestService {
         const formData = new FormData();
         formData.append('file', file);
     
-        return this.http.post(environment.apiUrl, formData);
+        return this.http.post(this.apiUrl+"upload", formData);
     }
 
 }
