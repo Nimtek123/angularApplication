@@ -4,6 +4,7 @@ const multer = require("multer");
 const path = require("path");
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
+const bcrypt = require('bcrypt');
 
 const app = express();
 
@@ -16,11 +17,43 @@ const PORT = 3000;
 const db = new sqlite3.Database('./db_data/video_db.sqlite3');
 
 // Check SQLite connection
-db.serialize(() => {
+db.serialize( async() => {
   db.run(`CREATE TABLE IF NOT EXISTS videos (id INT AUTO_INCREMENT PRIMARY KEY,filename TEXT,originalname TEXT,size INT,title TEXT)`);
+  db.run(`CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY,email TEXT,password TEXT)`);
+
+
+  
+  const hashedPassword = await bcrypt.hash("Pa$$w0rd!", 10);
+  const email = "jenax@mailinator.com";
+  
+  const existingUser = await getUserByUsername(email);
+  console.log(existingUser);
+
+  if (!existingUser) {
+    db.run('INSERT INTO users (id, email, password) VALUES (?, ?, ?)', [1, email, hashedPassword], (err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Failed to register user' });
+      }
+      // res.status(201).json({ message: 'User registered successfully' });
+    });
+  }
+ 
   console.log('Connected to SQLite database');
 });
 
+
+// Helper function to get a user by username
+const getUserByUsername = (email) => {
+  return new Promise((resolve, reject) => {
+    db.get('SELECT * FROM users WHERE email = ?', [email], (err, user) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(user);
+      }
+    });
+  });
+};
 
 // Middleware for handling JSON and URL-encoded form data
 app.use(express.json());
@@ -57,6 +90,7 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
   });
 });
 
+
 // RESTful API to get a list of saved files
 app.post("/api/files", async (req, res) => {
   // Retrieve files from MySQL database
@@ -73,6 +107,31 @@ app.post("/api/files", async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
   
+});
+
+
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body.payload;
+
+  // Retrieve user from the database
+  db.get('SELECT * FROM users WHERE email = ?', [email], async (err, user) => {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to fetch user' });
+    }
+    if (!user) {
+      console.log(req.body)
+      return res.status(401).json({ error: 'Invalid username or password' });
+    }
+
+    // Compare the provided password with the hashed password from the database
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (passwordMatch) {
+      res.json({ message: 'Login successful',  user});
+    } else {
+      res.status(401).json({ error: 'Invalid username or password', user });
+    }
+  });
 });
 
 app.listen(PORT, () => {

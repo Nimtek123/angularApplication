@@ -20,9 +20,9 @@ export class ApiRequestService {
     //APi Connection
     apiRequest(url: string, body: any): Observable<any> {
 
-        // if (!localStorage.getItem("userID")) {
-        //     this.router.navigateByUrl("/authentication/login");
-        // }
+        if (!localStorage.getItem("id")) {
+            this.router.navigateByUrl("/authentication/login");
+        }
         this.urlEnvironment = environment.apiUrl;
 
         // let accessToken = localStorage.getItem("access_token");

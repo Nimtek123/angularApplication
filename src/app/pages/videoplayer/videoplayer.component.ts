@@ -40,6 +40,11 @@ export class AppVideoplayerComponent {
   }
 
   ngOnInit() {
+    if (!localStorage.getItem("id")) {
+      this.router.navigateByUrl("/authentication/login");
+      return
+    }
+
     this.getFiles();
   }
 

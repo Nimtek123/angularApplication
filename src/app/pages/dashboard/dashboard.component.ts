@@ -51,6 +51,12 @@ export class AppDashboardComponent {
 
   
   ngOnInit(): void {
+    if (!localStorage.getItem("id")) {
+      this.router.navigateByUrl("/authentication/login");
+      return
+    }
+
+
     this.fileUpload.valueChanges.subscribe((files: File[]) =>
       console.log(this.fileUpload.value, this.fileUpload.valid)
     );

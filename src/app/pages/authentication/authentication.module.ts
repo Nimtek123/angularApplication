@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ApiRequestService } from '../../common/api-request.service';
 
 // icons
 import { TablerIconsModule } from 'angular-tabler-icons';
@@ -29,6 +30,7 @@ import { AppSideLoginComponent } from './login/login.component';
     ReactiveFormsModule,
     TablerIconsModule.pick(TablerIcons),
   ],
+  providers:[ApiRequestService],
   declarations: [
     AppSideLoginComponent,
   ],
