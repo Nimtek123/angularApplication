@@ -56,8 +56,9 @@ npm install
 ng serve
 ```
 ## Login Details
-jenax@mailinator.com
-Pa$$w0rd!
+<b>email</b>:  jenax@mailinator.com
+
+<b>password</b>: Pa$$w0rd!
 
 ## 📖 Documentation
 The Angular application will be available at http://localhost:4200.
